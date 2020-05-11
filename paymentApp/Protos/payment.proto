@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+import "user.proto";
+
+option csharp_namespace = "KafkaProducer.Protos";
+
+service Payment_Service {
+	rpc Pay (PaymentRequest) returns (Payment);
+	rpc Receive (UserIdRequest) returns (Payments);
+}
+
+message UserIdRequest {
+	string userId = 1;
+}
+
+message PaymentRequest {
+	int32 amount = 1;
+	string label = 2;
+	string receiverId = 3;
+	string senderId = 4;
+}
+
+message Payments {
+	repeated Payment payments = 1;
+}
+
+message Payment {
+	string id = 1;
+	int32 amount = 2;
+	string label = 3;
+	string receiverId = 4;
+	User sender = 5;
+	bool payed = 6;
+}

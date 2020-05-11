@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option csharp_namespace = "KafkaProducer.Protos";
+
+service User_Service {
+	rpc RegisterUser (RegisterReqeust) returns (User);
+	rpc GetUser (IdRequest) returns (User);
+}
+
+message IdRequest {
+	string id = 1;
+}
+
+message RegisterReqeust {
+	string name = 1;
+	int32 balance = 2;
+}
+
+message User {
+	string id = 1;
+	string name = 2;
+	int32 balance = 3;
+}
