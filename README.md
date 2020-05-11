@@ -28,6 +28,38 @@ If the core dns is crashed you can follow the next steps to fix it:
 2. Then use `kubectl get all --all-namespaces`  to check if the coredns pods are restarted.
 3. If the storage-provisioner also crashed but the coredns pods are running now. You can restart you machine to fix this.
 
+## Implementation guide
+This guide will give you information on how to implement Kafka into your own project.
+
+First step is to download Confluent.Kafka and add Consumer and Producer configurations in the appsettings.json:
+
+![Configuration](img/Configuration.png)
+
+In the startup file you can add these configurations to a singleton Consumer and Producer Config class:
+
+![StartupConfig](img/StartupConfig.png)
+
+The localhost:9092 needs to be the Kafka access point within your cluster. For local development you can use localhost if you use the [instructions](#deploy-kafka-locally)
+
+Within that demo project you can also find Producer- and Consumer wrappers that help to make the code cleaner. You can find them in the following folder: paymentApp/Common.
+
+Now make a producer call to a certain topic using the producerWrapper:
+
+![ProducerExample](img/ProducerExample.png)
+
+For the consumer you need a BackgroundService to make it run in the background on a separate thread. This will make it continuously searching for new data on a certain topic:
+
+![ConsumerExample](img/ConsumerExample.png)
+
+You also need to make the class a singleton in the startup file:
+
+![StartupConfigurationExample](img/StartupConsumerConfiguration.png)
+
+### Useful links
+- Transactions (useful for consuming in a microservice): https://www.confluent.io/blog/transactions-apache-kafka/ 
+- Full Kafka with rollback explanation: https://medium.com/@sharmaNK/asynchronous-payment-7de952460845
+- Kafka documentation: https://kafka.apache.org/documentation/ 
+
 ## Test Payment Application
 The payment application contains two kafka events that will fire at two different topics: process payment and process payment failed. These run as a background service so they will always run and search for new topic data to process. The following 2 scenario's will each make use of these processes:
 
