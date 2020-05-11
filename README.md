@@ -11,28 +11,28 @@ This README will contain instructions on how to deploy it on a local Kubernetes 
 4. Use: `helm install kafka deployments/kafka` to install kafka.
 5. Use: `helm install kafka-manager deployments/kafka-manager` to install the kafka-manager.
    This is a UI manager were you get an overview of topics, brokers and more.
-6. To see if all the pods have been deployed correctly run the following line: `kubectl get all --all-namespaces`.
-   It should look something like the following picture:
+6. To see if all the pods have been deployed correctly run the following command: `kubectl get all --all-namespaces`.
+   The result should look like the following picture:
    ![kubernetes](img/KubernetesScreenCapture.png)
 7. If you use minikube you will need to open a tunnel in order to access the kafka-manager: `minikube tunnel`.
 8. To go to the kafka-manager you can type in the external IP of the istio gateway service into a browser and login with the following credentials:  
    username: admin  
    password: admin  
-9. Now to start local development you will need to port forward kafka input port otherwise you cant access kafka: `kubectl -n kafka port-forward <DEPLOYMENT NAME> 9092:9092`.
+9. Now to start local development you will need to port forward the kafka input port otherwise you cant access kafka: `kubectl -n kafka port-forward <DEPLOYMENT NAME> 9092:9092`.
 10. Now run the project locally (don't recommend using IIS Express) and you can make GRPC calls to the backend trough: localhost:5000.
 
 ### Known issues
 #### Coredns crash
 If the core dns is crashed you can follow the next steps to fix it:
 1. `kubectl rollout restart -n kube-system deployment/coredns` to restart it.
-2. then use `kubectl get all --all-namespaces`  to check if the coredns pods are restarted.
-3. if the storage-provisioner also is crashed but the coredns pods are running now. You can restart kubernetes to fix this.
+2. Then use `kubectl get all --all-namespaces`  to check if the coredns pods are restarted.
+3. If the storage-provisioner also crashed but the coredns pods are running now. You can restart you machine to fix this.
 
 ## Test Payment Application
-The payment application contains two kafka events that will fire at two different topics: process payment and process payment failed. These run as a background service so they will always run and search for new topic data to process. The following 2 scenario's will each make use of these processes so you can follow these to test if the application works:
+The payment application contains two kafka events that will fire at two different topics: process payment and process payment failed. These run as a background service so they will always run and search for new topic data to process. The following 2 scenario's will each make use of these processes:
 
 ### Pay success
-If you register two users into the database you can make a payment between these users. The payment process will receive this payment and tries to process it. In this scenario it will succeed.
+If you register two users into the database you can make a payment between these users. The payment process will receive this payment and tries to process it. In this scenario it should succeed.
 1. Register two users and save their id's.
 2. Use the two id's in the pay call one as receiver the other as sender:
    ![Pay](img/Pay%20grpc.png)
